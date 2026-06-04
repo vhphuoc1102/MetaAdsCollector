@@ -972,7 +972,7 @@ class MetaAdsClient:
             cursor: Pagination cursor for next page
             first: Number of results per page (max ~30)
             sort_direction: ASCENDING or DESCENDING
-            sort_mode: SORT_BY_TOTAL_IMPRESSIONS or None (omit for default/relevancy)
+            sort_mode: Sort mode enum, or None to omit for default/relevancy
             session_id: Search session ID (reuse across pagination pages)
             collation_token: Collation token (reuse across pagination pages)
 
@@ -1020,10 +1020,11 @@ class MetaAdsClient:
             "viewAllPageID": "0",
         }
 
-        # Only include sortData for SORT_BY_TOTAL_IMPRESSIONS.
         # Omitting sortData gives default server-side sort (relevancy).
-        # Other sort mode strings cause noncoercible_variable_value errors.
-        if sort_mode == "SORT_BY_TOTAL_IMPRESSIONS":
+        if sort_mode in {
+            "SORT_BY_TOTAL_IMPRESSIONS",
+            "SORT_BY_RELEVANCY_MONTHLY_GROUPED",
+        }:
             variables["sortData"] = {
                 "direction": sort_direction,
                 "mode": sort_mode,

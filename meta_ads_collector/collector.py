@@ -32,6 +32,7 @@ from .constants import (
     SEARCH_PAGE,
     SEARCH_UNORDERED,
     SORT_IMPRESSIONS,
+    SORT_MOST_RECENT,
     SORT_RELEVANCY,
     STATUS_ACTIVE,
     STATUS_ALL,
@@ -91,7 +92,8 @@ class MetaAdsCollector:
     # Sort constants
     SORT_RELEVANCY = SORT_RELEVANCY
     SORT_IMPRESSIONS = SORT_IMPRESSIONS
-    SORT_DATE = None  # Not supported; falls back to server-default
+    SORT_MOST_RECENT = SORT_MOST_RECENT
+    SORT_DATE = SORT_MOST_RECENT
 
     def __init__(
         self,

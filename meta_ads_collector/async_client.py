@@ -553,7 +553,10 @@ class AsyncMetaAdsClient:
             "viewAllPageID": "0",
         }
 
-        if sort_mode == "SORT_BY_TOTAL_IMPRESSIONS":
+        if sort_mode in {
+            "SORT_BY_TOTAL_IMPRESSIONS",
+            "SORT_BY_RELEVANCY_MONTHLY_GROUPED",
+        }:
             variables["sortData"] = {
                 "direction": sort_direction,
                 "mode": sort_mode,

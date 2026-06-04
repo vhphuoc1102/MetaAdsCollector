@@ -221,3 +221,4 @@ class TestAsyncCollectorConstants:
         from meta_ads_collector.async_collector import AsyncMetaAdsCollector
         assert AsyncMetaAdsCollector.SORT_RELEVANCY is None
         assert AsyncMetaAdsCollector.SORT_IMPRESSIONS == "SORT_BY_TOTAL_IMPRESSIONS"
+        assert AsyncMetaAdsCollector.SORT_MOST_RECENT == "SORT_BY_RELEVANCY_MONTHLY_GROUPED"

@@ -64,7 +64,7 @@ Search for ads and yield results as an iterator.
 | `status` | `str` | `"ACTIVE"` | Status filter (`"ACTIVE"`, `"INACTIVE"`, `"ALL"`) |
 | `search_type` | `str` | `"KEYWORD_UNORDERED"` | Search type (`"KEYWORD_EXACT_PHRASE"`, `"KEYWORD_UNORDERED"`, `"PAGE"`) |
 | `page_ids` | `list[str] \| None` | `None` | Filter by specific page IDs |
-| `sort_by` | `str \| None` | `"SORT_BY_TOTAL_IMPRESSIONS"` | Sort order (`"SORT_BY_TOTAL_IMPRESSIONS"` or `None` for relevancy) |
+| `sort_by` | `str \| None` | `"SORT_BY_TOTAL_IMPRESSIONS"` | Sort order (`"SORT_BY_TOTAL_IMPRESSIONS"`, `"SORT_BY_RELEVANCY_MONTHLY_GROUPED"` for most recent, or `None` for server-default relevancy) |
 | `max_results` | `int \| None` | `None` | Maximum ads to collect (`None` = no limit) |
 | `page_size` | `int` | `10` | Results per API request (max ~30) |
 | `progress_callback` | `Callable[[int, int], None] \| None` | `None` | Callback `(collected, total)` for progress |
@@ -166,6 +166,7 @@ Close the collector and release resources.
 | `SEARCH_PAGE` | `"PAGE"` |
 | `SORT_RELEVANCY` | `None` |
 | `SORT_IMPRESSIONS` | `"SORT_BY_TOTAL_IMPRESSIONS"` |
+| `SORT_MOST_RECENT` | `"SORT_BY_RELEVANCY_MONTHLY_GROUPED"` |
 
 ---
 
@@ -729,3 +730,4 @@ Format a CollectionReport as a JSON string.
 |---|---|
 | `SORT_RELEVANCY` | `None` |
 | `SORT_IMPRESSIONS` | `"SORT_BY_TOTAL_IMPRESSIONS"` |
+| `SORT_MOST_RECENT` | `"SORT_BY_RELEVANCY_MONTHLY_GROUPED"` |

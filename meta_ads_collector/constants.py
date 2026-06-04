@@ -112,8 +112,9 @@ VALID_SEARCH_TYPES = frozenset({
 # ---------------------------------------------------------------------------
 SORT_RELEVANCY = None  # Omit sortData for server-default relevancy
 SORT_IMPRESSIONS = "SORT_BY_TOTAL_IMPRESSIONS"
+SORT_MOST_RECENT = "SORT_BY_RELEVANCY_MONTHLY_GROUPED"
 
-VALID_SORT_MODES = frozenset({None, SORT_IMPRESSIONS})
+VALID_SORT_MODES = frozenset({None, SORT_IMPRESSIONS, SORT_MOST_RECENT})
 
 # ---------------------------------------------------------------------------
 # Media type constants

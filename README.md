@@ -139,7 +139,7 @@ collector.collect_to_jsonl("output.jsonl", query="AI", country="US", max_results
 | `status` | `str` | `STATUS_ACTIVE` | `ACTIVE`, `INACTIVE`, `ALL` |
 | `search_type` | `str` | `SEARCH_KEYWORD` | `KEYWORD_EXACT_PHRASE`, `KEYWORD_UNORDERED`, `PAGE` |
 | `page_ids` | `list[str]` | `None` | Filter by specific page IDs |
-| `sort_by` | `str` | `SORT_IMPRESSIONS` | `SORT_BY_TOTAL_IMPRESSIONS` or `None` (relevancy) |
+| `sort_by` | `str` | `SORT_IMPRESSIONS` | `SORT_BY_TOTAL_IMPRESSIONS`, `SORT_BY_RELEVANCY_MONTHLY_GROUPED` (most recent), or `None` (server default relevancy) |
 | `max_results` | `int` | `None` | Maximum ads to collect (None = unlimited) |
 | `page_size` | `int` | `10` | Results per API request (max ~30) |
 | `filter_config` | `FilterConfig` | `None` | Client-side filter configuration |
@@ -493,7 +493,7 @@ meta-ads-collector [OPTIONS]
 | `-t, --ad-type` | `all`, `political`, `housing`, `employment`, `credit` | `all` |
 | `-s, --status` | `active`, `inactive`, `all` | `active` |
 | `--search-type` | `keyword`, `exact`, `page` | `keyword` |
-| `--sort-by` | `relevancy`, `impressions` | `impressions` |
+| `--sort-by` | `relevancy`, `impressions`, `most_recent` | `impressions` |
 | `--page-ids` | Filter by specific page IDs (space-separated) | |
 
 ### Page-Level Collection

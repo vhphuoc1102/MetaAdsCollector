@@ -34,6 +34,7 @@ from .constants import (
     SEARCH_PAGE,
     SEARCH_UNORDERED,
     SORT_IMPRESSIONS,
+    SORT_MOST_RECENT,
     SORT_RELEVANCY,
     STATUS_ACTIVE,
     STATUS_ALL,
@@ -96,6 +97,7 @@ class AsyncMetaAdsCollector:
     # Sort constants
     SORT_RELEVANCY = SORT_RELEVANCY
     SORT_IMPRESSIONS = SORT_IMPRESSIONS
+    SORT_MOST_RECENT = SORT_MOST_RECENT
 
     def __init__(
         self,
