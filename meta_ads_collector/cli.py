@@ -421,6 +421,38 @@ def build_filter_config(args: argparse.Namespace):
     return config
 
 
+def build_server_filters(args: argparse.Namespace):
+    """Translate CLI date/media/language flags into server-side GraphQL params.
+
+    The Ad Library API accepts ``startDate`` ({"min","max"}), ``mediaType`` and
+    ``contentLanguages`` directly (exactly as the public web UI sends them).
+    Pushing these to the server -- instead of only filtering client-side -- is
+    essential for ``most_recent`` sorting: otherwise pagination is spent on ads
+    outside the window/media/language and gets exhausted before in-window ads
+    are reached. Returns ``(media_type, content_languages, start_date)``.
+    """
+    # media type: --has-video is the common case; else explicit --media-type
+    media_type = "ALL"
+    if getattr(args, "has_video", None):
+        media_type = "video"
+    elif getattr(args, "media_type", None):
+        media_type = args.media_type.lower()
+
+    content_languages = getattr(args, "filter_languages", None) or None
+
+    start_date = None
+    date_min = getattr(args, "start_date", None) or None
+    date_max = getattr(args, "end_date", None) or None
+    if date_min or date_max:
+        start_date = {}
+        if date_min:
+            start_date["min"] = date_min
+        if date_max:
+            start_date["max"] = date_max
+
+    return media_type, content_languages, start_date
+
+
 def _write_ads_to_file(
     ads_iter: Iterable[Ad],
     output_path: str,
@@ -662,6 +694,10 @@ def main() -> int:
                 else:
                     logger.info("No previous run found; collecting all ads")
 
+            # Server-side narrowing (date window / media / language) — sent to
+            # the API so most_recent pagination isn't wasted on out-of-window ads
+            srv_media_type, srv_languages, srv_start_date = build_server_filters(args)
+
             # Common parameters for standard search
             params: Optional[dict[str, Any]] = {
                 "query": args.query,
@@ -675,6 +711,9 @@ def main() -> int:
                 "page_size": args.page_size,
                 "filter_config": fc,
                 "dedup_tracker": tracker,
+                "media_type": srv_media_type,
+                "content_languages": srv_languages,
+                "start_date": srv_start_date,
             }
 
             # Determine collection mode based on flags

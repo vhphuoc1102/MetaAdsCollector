@@ -311,6 +311,9 @@ class MetaAdsCollector:
         progress_callback: Optional[Callable[[int, int], None]] = None,
         filter_config: Optional[FilterConfig] = None,
         dedup_tracker: Optional[DeduplicationTracker] = None,
+        media_type: str = "ALL",
+        content_languages: Optional[list[str]] = None,
+        start_date: Optional[dict] = None,
     ) -> Iterator[Ad]:
         """
         Search for ads and yield results as Ad objects.
@@ -380,6 +383,7 @@ class MetaAdsCollector:
                             country=country,
                             ad_type=ad_type,
                             active_status=status,
+                            media_type=media_type,
                             search_type=search_type,
                             page_ids=page_ids,
                             cursor=cursor,
@@ -387,6 +391,8 @@ class MetaAdsCollector:
                             sort_mode=sort_by,
                             session_id=search_session_id,
                             collation_token=search_collation_token,
+                            content_languages=content_languages,
+                            start_date=start_date,
                         )
 
                         # Check for rate limiting
@@ -643,6 +649,9 @@ class MetaAdsCollector:
         progress_callback: Optional[Callable[[int, int], None]] = None,
         filter_config: Optional[FilterConfig] = None,
         dedup_tracker: Optional[DeduplicationTracker] = None,
+        media_type: str = "ALL",
+        content_languages: Optional[list[str]] = None,
+        start_date: Optional[dict] = None,
     ) -> Iterator[tuple[Ad, list[MediaDownloadResult]]]:
         """Search for ads and download their media files.
 
@@ -691,6 +700,9 @@ class MetaAdsCollector:
             progress_callback=progress_callback,
             filter_config=filter_config,
             dedup_tracker=dedup_tracker,
+            media_type=media_type,
+            content_languages=content_languages,
+            start_date=start_date,
         ):
             try:
                 results = downloader.download_ad_media(ad)
@@ -868,6 +880,9 @@ class MetaAdsCollector:
         page_size: int = 10,
         filter_config: Optional[FilterConfig] = None,
         dedup_tracker: Optional[DeduplicationTracker] = None,
+        media_type: str = "ALL",
+        content_languages: Optional[list[str]] = None,
+        start_date: Optional[dict] = None,
     ) -> list[Ad]:
         """
         Collect ads and return as a list.
@@ -886,6 +901,9 @@ class MetaAdsCollector:
             page_size=page_size,
             filter_config=filter_config,
             dedup_tracker=dedup_tracker,
+            media_type=media_type,
+            content_languages=content_languages,
+            start_date=start_date,
         ))
 
     def collect_to_json(
@@ -904,6 +922,9 @@ class MetaAdsCollector:
         indent: int = 2,
         filter_config: Optional[FilterConfig] = None,
         dedup_tracker: Optional[DeduplicationTracker] = None,
+        media_type: str = "ALL",
+        content_languages: Optional[list[str]] = None,
+        start_date: Optional[dict] = None,
     ) -> int:
         """
         Collect ads and save to a JSON file.
@@ -933,6 +954,9 @@ class MetaAdsCollector:
             page_size=page_size,
             filter_config=filter_config,
             dedup_tracker=dedup_tracker,
+            media_type=media_type,
+            content_languages=content_languages,
+            start_date=start_date,
         ):
             ads.append(ad.to_dict(include_raw=include_raw))
 
@@ -980,6 +1004,9 @@ class MetaAdsCollector:
         page_size: int = 10,
         filter_config: Optional[FilterConfig] = None,
         dedup_tracker: Optional[DeduplicationTracker] = None,
+        media_type: str = "ALL",
+        content_languages: Optional[list[str]] = None,
+        start_date: Optional[dict] = None,
     ) -> int:
         """
         Collect ads and save to a CSV file.
@@ -1042,6 +1069,9 @@ class MetaAdsCollector:
                 page_size=page_size,
                 filter_config=filter_config,
                 dedup_tracker=dedup_tracker,
+                media_type=media_type,
+                content_languages=content_languages,
+                start_date=start_date,
             ):
                 # Flatten ad data for CSV
                 primary_creative = ad.creatives[0] if ad.creatives else None
@@ -1095,6 +1125,9 @@ class MetaAdsCollector:
         include_raw: bool = False,
         filter_config: Optional[FilterConfig] = None,
         dedup_tracker: Optional[DeduplicationTracker] = None,
+        media_type: str = "ALL",
+        content_languages: Optional[list[str]] = None,
+        start_date: Optional[dict] = None,
     ) -> int:
         """
         Collect ads and save to a JSON Lines file (one JSON object per line).
@@ -1124,6 +1157,9 @@ class MetaAdsCollector:
                 page_size=page_size,
                 filter_config=filter_config,
                 dedup_tracker=dedup_tracker,
+                media_type=media_type,
+                content_languages=content_languages,
+                start_date=start_date,
             ):
                 f.write(json.dumps(ad.to_dict(include_raw=include_raw), ensure_ascii=False))
                 f.write("\n")

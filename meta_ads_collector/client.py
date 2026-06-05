@@ -957,6 +957,8 @@ class MetaAdsClient:
         sort_mode: Optional[str] = "SORT_BY_TOTAL_IMPRESSIONS",
         session_id: Optional[str] = None,
         collation_token: Optional[str] = None,
+        content_languages: Optional[list] = None,
+        start_date: Optional[dict] = None,
     ) -> tuple[dict[str, Any], Optional[str]]:
         """
         Search for ads in the Meta Ad Library.
@@ -999,7 +1001,7 @@ class MetaAdsClient:
             "adType": ad_type,
             "bylines": [],
             "collationToken": collation_token,
-            "contentLanguages": [],
+            "contentLanguages": content_languages or [],
             "countries": [country],
             "excludedIDs": [],
             "first": first,
@@ -1015,7 +1017,7 @@ class MetaAdsClient:
             "searchType": search_type,
             "sessionID": session_id,
             "source": None,
-            "startDate": None,
+            "startDate": start_date,
             "v": self._tokens.get("v", "fbece7"),
             "viewAllPageID": "0",
         }
