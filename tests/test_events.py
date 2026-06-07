@@ -372,6 +372,28 @@ class TestSearchEventEmission:
         assert len(events) == 1  # Second page is empty, no page_fetched
         assert events[0].data["has_next_page"] is True
 
+    def test_empty_page_with_cursor_does_not_stop_pagination(self):
+        collector = self._make_collector()
+        collector.client.search_ads.side_effect = [
+            (
+                {"ads": [{"ad_archive_id": "ad-1"}], "page_info": {}},
+                "cursor-1",
+            ),
+            (
+                {"ads": [], "page_info": {"has_next_page": True}},
+                "cursor-2",
+            ),
+            (
+                {"ads": [{"ad_archive_id": "ad-2"}], "page_info": {}},
+                None,
+            ),
+        ]
+
+        ads = list(collector.search(query="test", country="US"))
+
+        assert [ad.id for ad in ads] == ["ad-1", "ad-2"]
+        assert collector.client.search_ads.call_count == 3
+
     def test_error_occurred_on_ad_parse_failure(self):
         collector = self._make_collector()
         # Return invalid ad data that will cause parsing to fail

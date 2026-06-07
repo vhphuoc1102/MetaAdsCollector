@@ -345,6 +345,9 @@ class MetaAdsCollector:
         collected = 0
         page_number = 0
         search_start_time = time.monotonic()
+        seen_cursors: set[str] = set()
+        empty_pages_with_cursor = 0
+        max_empty_pages_with_cursor = 100
 
         # Generate consistent session_id and collation_token for the entire search
         search_session_id = str(uuid.uuid4())
@@ -463,8 +466,30 @@ class MetaAdsCollector:
                 ads_data = response.get("ads", [])
 
                 if not ads_data:
-                    logger.info("No more results returned")
-                    break
+                    if not next_cursor:
+                        logger.info("No more results returned")
+                        break
+                    empty_pages_with_cursor += 1
+                    if empty_pages_with_cursor > max_empty_pages_with_cursor:
+                        logger.warning(
+                            "Stopping pagination after %d consecutive empty pages with cursors",
+                            max_empty_pages_with_cursor,
+                        )
+                        break
+                    logger.debug(
+                        "Empty result page returned with a next cursor; continuing pagination "
+                        "(empty streak: %d)",
+                        empty_pages_with_cursor,
+                    )
+                    if next_cursor in seen_cursors:
+                        logger.warning("Stopping pagination because the next cursor repeated")
+                        break
+                    seen_cursors.add(next_cursor)
+                    cursor = next_cursor
+                    self._delay()
+                    continue
+
+                empty_pages_with_cursor = 0
 
                 # Emit page_fetched after processing the page
                 has_next = bool(next_cursor)
@@ -516,6 +541,10 @@ class MetaAdsCollector:
                     logger.info("No more pages available")
                     break
 
+                if next_cursor in seen_cursors:
+                    logger.warning("Stopping pagination because the next cursor repeated")
+                    break
+                seen_cursors.add(next_cursor)
                 cursor = next_cursor
                 logger.debug(f"Fetching next page (collected: {collected})")
 
